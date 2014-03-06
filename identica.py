@@ -46,26 +46,26 @@ class Entity(object):
         """
         Completely deletes this entity identica.
         """
-        pass
+        raise NotImplementedError
 
     def update(self, *args, **kwags):
         """
         Updates this entity's properties.
         """
-        pass
+        raise NotImplementedError
 
     def save(self, *args, **kwargs):
         """
         Syncs this entity with the identica server.
         """
-        pass
+        raise NotImplementedError
 
     @classmethod
     def create(cls, entity, *args, **kwargs):
         """
         Creates an instance of this entity.
         """
-        pass
+        raise NotImplementedError
 
     @classmethod
     def find_by_id(cls, identica_url, entity, id):
@@ -83,7 +83,7 @@ class Entity(object):
         """
         Queries a single instance of an entity by a property.
         """
-        pass
+        raise NotImplementedError
 
 
 class Identica(object):
@@ -101,4 +101,4 @@ class Identica(object):
         """
         Finds an instance of an entity by a property.
         """
-        pass
+        raise NotImplementedError
