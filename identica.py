@@ -4,6 +4,9 @@ import requests
 def _construct_entity_url(identica_url, entity, id=None, suffix=None):
     """
     Constructs a url given an entity, id, and a suffix.
+
+    /<entity>/<action>
+    /<entity>/<id>/<action>
     """
     if id is None:
         url = "%s/%s" % (identica_url, entity)
