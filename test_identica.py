@@ -27,6 +27,16 @@ class TestEntity(unittest.TestCase):
     def tearDown(self):
         self.e = None
 
+    def test_subclass(self):
+        class User(Entity):
+            identica_url = 'identica_url'
+            entity = 'users'
+
+        u = User()
+
+        self.assertEqual(u.identica_url, 'identica_url')
+        self.assertEqual(u.entity, 'users')
+
     def test_get(self):
         self.assertEqual(self.e.get('name'), 'awesome')
         self.assertIsNone(self.e.get('nonexistent'))

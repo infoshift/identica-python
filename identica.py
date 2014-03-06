@@ -19,10 +19,13 @@ def _construct_entity_url(identica_url, entity, id=None, suffix=None):
 
 class Entity(object):
 
+    identica_url = None
+    entity = None
+
     def __init__(self, identica_url=None, entity=None, id=None,
                  properties=None):
-        self.identica_url = identica_url
-        self.entity = entity
+        self.identica_url = self.identica_url or identica_url
+        self.entity = self.entity or entity
         self.id = id
 
         self._properties = properties
