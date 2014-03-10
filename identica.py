@@ -1,6 +1,11 @@
 import requests
 
 
+def nested_object(name, mapping):
+    return [(u'{}[{}]'.format(name, key), value) for key, value
+            in mapping.iteritems()]
+
+
 class Identica(object):
 
     url = None
@@ -15,8 +20,10 @@ class Identica(object):
         """
         return Entity.find_by_id(self, entity, id)
 
-    def _request(self, url, method='get', headers=None, data=None):
-        return getattr(requests, method)(url, headers=headers, data=data)
+    def _request(self, url, method='get', headers=None, data=None,
+                 params={}):
+        return getattr(requests, method)(url, headers=headers, data=data,
+                                         params=nested_object('query', params))
 
     def _construct_url(self, endpoint):
         return "%s/%s" % (self.url, endpoint)
@@ -70,10 +77,16 @@ class Entity(object):
         Destroys this entity in the identica server.
         """
         url = '%s/%s/%s' % (self.identica.url, self.entity, self.id)
-        r = self.identica._request(url, method='delete')
+        self.identica._request(url, method='delete')
         return self
 
     @classmethod
     def find_by_id(cls, identica, entity, id):
         r = identica._request("%s/%s/%s" % (identica.url, entity, id))
         return cls(identica, entity, **r.json())
+
+    @classmethod
+    def query(cls, identica, entity, **query):
+        r = identica._request("%s/%s" % (identica.url, entity), params=query)
+        data = r.json()
+        return [Entity(**d) for d in data.get('collection', [])]

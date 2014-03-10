@@ -122,6 +122,27 @@ class TestEntity(unittest.TestCase):
                    first_name='Jesse', last_name='Panganiban')
         e.destroy()
 
+    def test_query(self):
+        mock_data = {
+            'collection': [
+                {
+                    'id': 1,
+                    'first_name': 'Jesse',
+                    'last_name': 'Panganiban'
+                }
+            ]
+        }
+
+        httpretty.register_uri(httpretty.GET,
+                               'http://localhost:3000/identica/users',
+                               body=json.dumps(mock_data),
+                               content_type='application/json')
+        i = Identica(url='http://localhost:3000/identica')
+        entities = Entity.query(i, 'users',
+                                first_name="Jesse", last_name="Panganiban")
+        self.assertIsInstance(entities, list)
+        self.assertEqual(len(entities), 1)
+
 
 if __name__ == '__main__':
     unittest.main()
