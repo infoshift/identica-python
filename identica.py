@@ -19,6 +19,9 @@ class Identica(object):
         """
         raise NotImplementedError
 
+    def _construct_url(self, endpoint):
+        return "%s/%s" % (self.url, endpoint)
+
 
 class Entity(object):
 

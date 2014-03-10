@@ -32,6 +32,13 @@ class TestIdentica(unittest.TestCase):
             Entity
         )
 
+    def test_construct_url(self):
+        i = Identica(url='http://localhost:3000/identica')
+        self.assertEqual(i._construct_url('entities'),
+                         'http://localhost:3000/identica/entities')
+        self.assertEqual(i._construct_url('entities/5'),
+                         'http://localhost:3000/identica/entities/5')
+
 
 if __name__ == '__main__':
     unittest.main()
