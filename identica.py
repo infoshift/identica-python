@@ -1,3 +1,17 @@
+class Identica(object):
+
+    url = None
+
+    def __init__(self, url=None):
+        self.url = url or self.url
+
+    def find_entity_by_id(self, entity, id):
+        raise NotImplementedError
+
+    def find_entity_by_property(self, entity, property, value):
+        raise NotImplementedError
+
+
 class Entity(object):
 
     entity = None
