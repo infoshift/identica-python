@@ -6,9 +6,17 @@ class Identica(object):
         self.url = url or self.url
 
     def find_entity_by_id(self, entity, id):
+        """
+        Finds a single instance of entity from the server
+        given the id.
+        """
         raise NotImplementedError
 
     def find_entity_by_property(self, entity, property, value):
+        """
+        Finds a single instance of entity from the server
+        given a property-based criteria.
+        """
         raise NotImplementedError
 
 
