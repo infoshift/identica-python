@@ -1,4 +1,5 @@
 import requests
+import json
 
 
 def nested_object(name, mapping):
@@ -9,6 +10,9 @@ def nested_object(name, mapping):
 class Identica(object):
 
     url = None
+    default_headers = {
+        'content-type': 'application/json'
+    }
 
     def __init__(self, url=None):
         self.url = url or self.url
@@ -20,8 +24,9 @@ class Identica(object):
         """
         return Entity.find_by_id(self, entity, id)
 
-    def _request(self, url, method='get', headers=None, data=None,
+    def _request(self, url, method='get', headers={}, data={},
                  params={}):
+        headers.update(self.default_headers)
         return getattr(requests, method)(url, headers=headers, data=data,
                                          params=nested_object('query', params))
 
@@ -67,7 +72,10 @@ class Entity(object):
             method = 'put'
             url = '%s/%s/%s' % (self.identica.url, self.entity, self.id)
 
-        r = self.identica._request(url, method=method)
+        r = self.identica._request(url, method=method,
+                                   data=json.dumps({
+                                       'resource': self._properties
+                                   }))
         self._properties = r.json()
 
         return self
@@ -83,6 +91,8 @@ class Entity(object):
     @classmethod
     def find_by_id(cls, identica, entity, id):
         r = identica._request("%s/%s/%s" % (identica.url, entity, id))
+        if r.status_code != 200:
+            return None
         return cls(identica, entity, **r.json())
 
     @classmethod

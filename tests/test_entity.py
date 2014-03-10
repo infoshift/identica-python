@@ -71,9 +71,23 @@ class TestEntity(unittest.TestCase):
         self.assertEqual(e._properties, mock_data)
         self.assertEqual(e.identica, i)
 
+    def test_find_by_id_not_found(self):
+        httpretty.register_uri(httpretty.GET,
+                               'http://localhost:3000/identica/users/1',
+                               body=None,
+                               content_type='application/json',
+                               status=404)
+
+        i = Identica(url='http://localhost:3000/identica')
+        e = Entity.find_by_id(i, 'users', 1)
+        self.assertIsNone(e)
+
     def test_save_new(self):
         mock_data = {
             'id': 1,
+            'email': 'testing@testing.com',
+            'passsword': 'blahblah',
+            'password_confirmation': 'blahblah',
             'first_name': 'Jesse',
             'last_name': 'Panganiban'
         }
@@ -85,7 +99,10 @@ class TestEntity(unittest.TestCase):
 
         i = Identica(url='http://localhost:3000/identica')
         e = Entity(identica=i, entity='users',
-                   first_name='Jesse', last_name='Panganiban')
+                   first_name='Jesse',
+                   last_name='Panganiban',
+                   email='test@testing.com',
+                   password='blahblah')
         e.save()
 
     def test_save_existing(self):
@@ -102,23 +119,23 @@ class TestEntity(unittest.TestCase):
 
         i = Identica(url='http://localhost:3000/identica')
         e = Entity(identica=i, entity='users', id=1,
-                   first_name='Jesse', last_name='Panganiban')
+                   first_name='Jesse', last_name='PanganibanNew')
         e.save()
 
     def test_destroy(self):
         mock_data = {
-            'id': 1,
+            'id': 6,
             'first_name': 'Jesse',
             'last_name': 'Panganiban'
         }
 
         httpretty.register_uri(httpretty.DELETE,
-                               'http://localhost:3000/identica/users/1',
+                               'http://localhost:3000/identica/users/6',
                                body=json.dumps(mock_data),
                                content_type='application/json')
 
         i = Identica(url='http://localhost:3000/identica')
-        e = Entity(identica=i, entity='users', id=1,
+        e = Entity(identica=i, entity='users', id=6,
                    first_name='Jesse', last_name='Panganiban')
         e.destroy()
 
