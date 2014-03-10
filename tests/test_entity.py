@@ -69,6 +69,7 @@ class TestEntity(unittest.TestCase):
 
         self.assertIsInstance(e, Entity)
         self.assertEqual(e._properties, mock_data)
+        self.assertEqual(e.identica, i)
 
     def test_save_new(self):
         mock_data = {

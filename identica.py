@@ -76,4 +76,4 @@ class Entity(object):
     @classmethod
     def find_by_id(cls, identica, entity, id):
         r = identica._request("%s/%s/%s" % (identica.url, entity, id))
-        return cls(entity, **r.json())
+        return cls(identica, entity, **r.json())
