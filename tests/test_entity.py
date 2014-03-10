@@ -4,6 +4,7 @@ import httpretty
 import json
 
 
+@httpretty.activate
 class TestEntity(unittest.TestCase):
 
     def setUp(self):
@@ -53,7 +54,6 @@ class TestEntity(unittest.TestCase):
         e = Entity(id=5)
         self.assertEqual(e.id, 5)
 
-    @httpretty.activate
     def test_find_by_id(self):
         mock_data = {'id': 1,
                      'first_name': 'Jesse',
@@ -69,6 +69,40 @@ class TestEntity(unittest.TestCase):
 
         self.assertIsInstance(e, Entity)
         self.assertEqual(e._properties, mock_data)
+
+    def test_save_new(self):
+        mock_data = {
+            'id': 1,
+            'first_name': 'Jesse',
+            'last_name': 'Panganiban'
+        }
+
+        httpretty.register_uri(httpretty.POST,
+                               'http://localhost:3000/identica/users',
+                               body=json.dumps(mock_data),
+                               content_type='application/json')
+
+        i = Identica(url='http://localhost:3000/identica')
+        e = Entity(identica=i, entity='users',
+                   first_name='Jesse', last_name='Panganiban')
+        e.save()
+
+    def test_save_existing(self):
+        mock_data = {
+            'id': 1,
+            'first_name': 'Jesse',
+            'last_name': 'Panganiban'
+        }
+
+        httpretty.register_uri(httpretty.PUT,
+                               'http://localhost:3000/identica/users/1',
+                               body=json.dumps(mock_data),
+                               content_type='application/json')
+
+        i = Identica(url='http://localhost:3000/identica')
+        e = Entity(identica=i, entity='users', id=1,
+                   first_name='Jesse', last_name='Panganiban')
+        e.save()
 
 
 if __name__ == '__main__':

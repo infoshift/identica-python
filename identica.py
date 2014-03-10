@@ -49,6 +49,22 @@ class Entity(object):
         self._properties[property] = value
         return self.get(property)
 
+    def save(self):
+        """
+        Synchronizes this entity with the identica server.
+        """
+        method = 'post'
+        url = '%s/%s' % (self.identica.url, self.entity)
+
+        if self.id:
+            method = 'put'
+            url = '%s/%s/%s' % (self.identica.url, self.entity, self.id)
+
+        r = self.identica._request(url, method=method)
+        self._properties = r.json()
+
+        return self
+
     @classmethod
     def find_by_id(cls, identica, entity, id):
         r = identica._request("%s/%s/%s" % (identica.url, entity, id))
