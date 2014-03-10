@@ -21,7 +21,17 @@ class TestEntity(unittest.TestCase):
         self.assertEqual(User().entity, 'users')
 
         # Setting the entity name to 'tests'
-        self.assertEqual(Entity('tests').entity, 'tests')
+        self.assertEqual(Entity(entity='tests').entity, 'tests')
+
+    def test_identica(self):
+        """Sanity checks on the 'identica' property"""
+        class User(Entity):
+            identica = Identica(url='test')
+
+        self.assertEqual(User.identica.url, 'test')
+        self.assertEqual(User().identica.url, 'test')
+        self.assertEqual(User(identica=Identica('non-test')).identica.url,
+                         'non-test')
 
     def test_properties(self):
         """Sanity checks on the Entity 'properties'."""

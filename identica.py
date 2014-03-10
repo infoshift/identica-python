@@ -25,8 +25,10 @@ class Identica(object):
 class Entity(object):
 
     entity = None
+    identica = None
 
-    def __init__(self, entity=None, **kwargs):
+    def __init__(self, identica=None, entity=None, **kwargs):
+        self.identica = identica or self.identica
         self.entity = entity or self.entity
         self._properties = kwargs
 
