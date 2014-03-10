@@ -13,8 +13,7 @@ class Identica(object):
         Finds a single instance of entity from the server
         given the id.
         """
-        response = self._request("%s/%s/%s" % (self.url, entity, id))
-        return Entity(**response.json())
+        return Entity.find_by_id(self, entity, id)
 
     def _request(self, url, method='get', headers=None, data=None):
         return getattr(requests, method)(url, headers=headers, data=data)
@@ -47,3 +46,8 @@ class Entity(object):
         """
         self._properties[property] = value
         return self.get(property)
+
+    @classmethod
+    def find_by_id(cls, identica, entity, id):
+        r = identica._request("%s/%s/%s" % (identica.url, entity, id))
+        return cls(entity, **r.json())

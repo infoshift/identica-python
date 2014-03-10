@@ -1,5 +1,7 @@
 import unittest
-from identica import Entity
+from identica import Entity, Identica
+import httpretty
+import json
 
 
 class TestEntity(unittest.TestCase):
@@ -40,6 +42,23 @@ class TestEntity(unittest.TestCase):
         """
         e = Entity(id=5)
         self.assertEqual(e.id, 5)
+
+    @httpretty.activate
+    def test_find_by_id(self):
+        mock_data = {'id': 1,
+                     'first_name': 'Jesse',
+                     'last_name': 'Panganiban'}
+
+        httpretty.register_uri(httpretty.GET,
+                               'http://localhost:3000/identica/users/1',
+                               body=json.dumps(mock_data),
+                               content_type='application/json')
+
+        i = Identica(url='http://localhost:3000/identica')
+        e = Entity.find_by_id(i, 'users', 1)
+
+        self.assertIsInstance(e, Entity)
+        self.assertEqual(e._properties, mock_data)
 
 
 if __name__ == '__main__':
