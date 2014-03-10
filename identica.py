@@ -1,104 +1,24 @@
-import requests
-
-
-def _construct_entity_url(identica_url, entity, id=None, suffix=None):
-    """
-    Constructs a url given an entity, id, and a suffix.
-
-    /<entity>/<action>
-    /<entity>/<id>/<action>
-    """
-    if id is None:
-        url = "%s/%s" % (identica_url, entity)
-    else:
-        url = "%s/%s/%s" % (identica_url, entity, id)
-    if suffix:
-        url += suffix
-    return url
-
-
 class Entity(object):
 
-    identica_url = None
     entity = None
 
-    def __init__(self, identica_url=None, entity=None, id=None,
-                 properties=None):
-        self.identica_url = self.identica_url or identica_url
-        self.entity = self.entity or entity
-        self.id = id
+    def __init__(self, entity=None, **kwargs):
+        self.entity = entity or self.entity
+        self._properties = kwargs
 
-        self._properties = properties
+    @property
+    def id(self):
+        return self.get('id')
 
     def get(self, property):
         """
-        Getter.
+        Entity property getter.
         """
         return self._properties.get(property, None)
 
     def set(self, property, value):
         """
-        Setter.
+        Entity property setter.
         """
         self._properties[property] = value
-
-    def delete(self):
-        """
-        Completely deletes this entity identica.
-        """
-        raise NotImplementedError
-
-    def update(self, *args, **kwags):
-        """
-        Updates this entity's properties.
-        """
-        raise NotImplementedError
-
-    def save(self, *args, **kwargs):
-        """
-        Syncs this entity with the identica server.
-        """
-        raise NotImplementedError
-
-    @classmethod
-    def create(cls, entity, *args, **kwargs):
-        """
-        Creates an instance of this entity.
-        """
-        raise NotImplementedError
-
-    @classmethod
-    def find_by_id(cls, identica_url, entity, id):
-        """
-        Queries a single instance of an entity.
-        """
-        url = _construct_entity_url(identica_url, entity, id, suffix='.json')
-        response = requests.get(url)
-        if response.status_code == 200:
-            return cls(identica_url, entity, id, response.json())
-        return None
-
-    @classmethod
-    def find_by_property(cls, entity, property, value):
-        """
-        Queries a single instance of an entity by a property.
-        """
-        raise NotImplementedError
-
-
-class Identica(object):
-
-    def __init__(self, identica_url=None):
-        self.identica_url = identica_url
-
-    def find_entity_by_id(self, entity, id):
-        """
-        Finds an instance of an entity by id.
-        """
-        return Entity.find_by_id(self.identica_url, entity, id)
-
-    def find_entity_by_property(self, entity, property, value):
-        """
-        Finds an instance of an entity by a property.
-        """
-        raise NotImplementedError
+        return self.get(property)
