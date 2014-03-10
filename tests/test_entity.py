@@ -104,6 +104,23 @@ class TestEntity(unittest.TestCase):
                    first_name='Jesse', last_name='Panganiban')
         e.save()
 
+    def test_destroy(self):
+        mock_data = {
+            'id': 1,
+            'first_name': 'Jesse',
+            'last_name': 'Panganiban'
+        }
+
+        httpretty.register_uri(httpretty.DELETE,
+                               'http://localhost:3000/identica/users/1',
+                               body=json.dumps(mock_data),
+                               content_type='application/json')
+
+        i = Identica(url='http://localhost:3000/identica')
+        e = Entity(identica=i, entity='users', id=1,
+                   first_name='Jesse', last_name='Panganiban')
+        e.destroy()
+
 
 if __name__ == '__main__':
     unittest.main()

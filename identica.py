@@ -65,6 +65,14 @@ class Entity(object):
 
         return self
 
+    def destroy(self):
+        """
+        Destroys this entity in the identica server.
+        """
+        url = '%s/%s/%s' % (self.identica.url, self.entity, self.id)
+        r = self.identica._request(url, method='delete')
+        return self
+
     @classmethod
     def find_by_id(cls, identica, entity, id):
         r = identica._request("%s/%s/%s" % (identica.url, entity, id))
