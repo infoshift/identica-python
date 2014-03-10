@@ -1,6 +1,7 @@
 from identica import Identica, Entity
-from mock import Mock
+import httpretty
 import unittest
+import json
 
 
 class TestIdentica(unittest.TestCase):
@@ -17,20 +18,22 @@ class TestIdentica(unittest.TestCase):
         self.assertEqual(Identica(url='http://localhost:3000/identica').url,
                          'http://localhost:3000/identica')
 
-    def test_entity(self):
-        """Must be able to do awesome stuff with the
-        identica instance right away."""
-        i = Identica()
+    @httpretty.activate
+    def test_find_entity_by_id(self):
+        mock_data = {'id': 1,
+                     'first_name': 'Jesse',
+                     'last_name': 'Panganiban'}
 
-        i.find_entity_by_id = Mock(return_value=Entity(entity='users', id=1))
-        i.find_entity_by_property = \
-            Mock(return_value=Entity(entity='users', first_name='Jesse'))
+        httpretty.register_uri(httpretty.GET,
+                               'http://localhost:3000/identica/users/1',
+                               body=json.dumps(mock_data),
+                               content_type='application/json')
 
-        self.assertIsInstance(i.find_entity_by_id('users', 1), Entity)
-        self.assertIsInstance(
-            i.find_entity_by_property('users', 'first_name', 'Jesse'),
-            Entity
-        )
+        i = Identica(url='http://localhost:3000/identica')
+        e = i.find_entity_by_id('users', 1)
+
+        self.assertIsInstance(e, Entity)
+        self.assertEqual(e._properties, mock_data)
 
     def test_construct_url(self):
         i = Identica(url='http://localhost:3000/identica')

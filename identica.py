@@ -1,3 +1,6 @@
+import requests
+
+
 class Identica(object):
 
     url = None
@@ -10,14 +13,11 @@ class Identica(object):
         Finds a single instance of entity from the server
         given the id.
         """
-        raise NotImplementedError
+        response = self._request("%s/%s/%s" % (self.url, entity, id))
+        return Entity(**response.json())
 
-    def find_entity_by_property(self, entity, property, value):
-        """
-        Finds a single instance of entity from the server
-        given a property-based criteria.
-        """
-        raise NotImplementedError
+    def _request(self, url, method='get', headers=None, data=None):
+        return getattr(requests, method)(url, headers=headers, data=data)
 
     def _construct_url(self, endpoint):
         return "%s/%s" % (self.url, endpoint)
