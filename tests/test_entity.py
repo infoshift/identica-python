@@ -165,6 +165,21 @@ class TestEntity(unittest.TestCase):
         self.assertIsInstance(entities, list)
         self.assertEqual(len(entities), 1)
 
+    def test_santized_properties(self):
+        e = Entity(first_name='Jesse', last_name='Panganiban')
+        self.assertEqual(e._sanitized_properties,
+                         {'first_name': 'Jesse', 'last_name': 'Panganiban'})
+
+    def test_exclude_properties(self):
+        class User(Entity):
+            excluded_properties = ['created_at', 'updated_at']
+
+        e = User(first_name='Jesse', last_name='Panganiban',
+                 created_at='now', updated_at='now')
+
+        self.assertEqual(e._sanitized_properties,
+                         {'first_name': 'Jesse', 'last_name': 'Panganiban'})
+
 
 if __name__ == '__main__':
     unittest.main()

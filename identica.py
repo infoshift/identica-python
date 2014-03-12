@@ -50,10 +50,21 @@ class Entity(object):
     entity = None
     identica = None
 
+    excluded_properties = [
+    ]
+
     def __init__(self, identica=None, entity=None, **kwargs):
         self.identica = identica or self.identica
         self.entity = entity or self.entity
         self._properties = kwargs
+
+    @property
+    def _sanitized_properties(self):
+        h = {}
+        for k, v in self._properties.iteritems():
+            if k not in self.excluded_properties:
+                h[k] = v
+        return h
 
     @property
     def id(self):
@@ -85,7 +96,7 @@ class Entity(object):
 
         r = self.identica._request(url, method=method,
                                    data=json.dumps({
-                                       'resource': self._properties
+                                       'resource': self._sanitized_properties
                                    }))
         self._properties = r.json()
 
