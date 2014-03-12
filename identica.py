@@ -22,7 +22,10 @@ class Identica(object):
         Finds a single instance of entity from the server
         given the id.
         """
-        return Entity.find_by_id(self, entity, id)
+        cls = Entity
+        cls.entity = entity
+        cls.identica = self
+        return cls.find_by_id(id)
 
     def _request(self, url, method='get', headers={}, data={},
                  params={}):
@@ -97,11 +100,12 @@ class Entity(object):
         return self
 
     @classmethod
-    def find_by_id(cls, identica, entity, id):
-        r = identica._request("%s/%s/%s" % (identica.url, entity, id))
+    def find_by_id(cls, id):
+        r = cls.identica._request("%s/%s/%s" %
+                                  (cls.identica.url, cls.entity, id))
         if r.status_code != 200:
             return None
-        return cls(identica, entity, **r.json())
+        return cls(**r.json())
 
     @classmethod
     def query(cls, identica, entity=None, **query):

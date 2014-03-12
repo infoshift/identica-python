@@ -65,7 +65,9 @@ class TestEntity(unittest.TestCase):
                                content_type='application/json')
 
         i = Identica(url='http://localhost:3000/identica')
-        e = Entity.find_by_id(i, 'users', 1)
+        Entity.entity = 'users'
+        Entity.identica = i
+        e = Entity.find_by_id(1)
 
         self.assertIsInstance(e, Entity)
         self.assertEqual(e._properties, mock_data)
@@ -79,7 +81,9 @@ class TestEntity(unittest.TestCase):
                                status=404)
 
         i = Identica(url='http://localhost:3000/identica')
-        e = Entity.find_by_id(i, 'users', 1)
+        Entity.entity = 'users'
+        Entity.identica = i
+        e = Entity.find_by_id(1)
         self.assertIsNone(e)
 
     def test_save_new(self):
