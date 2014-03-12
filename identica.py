@@ -96,7 +96,8 @@ class Entity(object):
         return cls(identica, entity, **r.json())
 
     @classmethod
-    def query(cls, identica, entity, **query):
-        r = identica._request("%s/%s" % (identica.url, entity), params=query)
+    def query(cls, identica, entity=None, **query):
+        r = identica._request("%s/%s" % (identica.url, entity or cls.entity),
+                              params=query)
         data = r.json()
         return [cls(**d) for d in data.get('collection', [])]
