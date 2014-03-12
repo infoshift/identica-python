@@ -33,6 +33,11 @@ class Identica(object):
     def _construct_url(self, endpoint):
         return "%s/%s" % (self.url, endpoint)
 
+    @property
+    def Entity(self):
+        Entity.identica = self
+        return Entity
+
 
 class Entity(object):
 
