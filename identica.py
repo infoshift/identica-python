@@ -13,9 +13,11 @@ class Identica(object):
     default_headers = {
         'content-type': 'application/json'
     }
+    purse = None
 
-    def __init__(self, url=None):
+    def __init__(self, url=None, **options):
         self.url = url or self.url
+        self.__dict__.update(options)
 
     def find_entity_by_id(self, entity, id):
         """
@@ -36,8 +38,9 @@ class Identica(object):
     def _construct_url(self, endpoint):
         return "%s/%s" % (self.url, endpoint)
 
-    def configure(self, url=None):
-        self.url = url
+    def configure(self, url=None, **options):
+        self.url = url or self.url
+        self.__dict__.update(options)
 
     @property
     def Entity(self):
@@ -112,8 +115,9 @@ class Entity(object):
 
     @classmethod
     def find_by_id(cls, id):
-        r = cls.identica._request("%s/%s/%s" %
-                                  (cls.identica.url, cls.entity, id))
+        url = "%s/%s/%s" % (cls.identica.url, cls.entity, id)
+        print url
+        r = cls.identica._request(url)
         if r.status_code != 200:
             return None
         return cls(**r.json())
