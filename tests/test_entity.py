@@ -31,7 +31,7 @@ class TestEntity(unittest.TestCase):
 
         self.assertEqual(User.identica.url, 'test')
         self.assertEqual(User().identica.url, 'test')
-        self.assertEqual(User(identica=Identica('non-test')).identica.url,
+        self.assertEqual(User(identica=Identica(url='non-test')).identica.url,
                          'non-test')
 
     def test_properties(self):

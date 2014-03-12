@@ -9,14 +9,11 @@ def nested_object(name, mapping):
 
 class Identica(object):
 
-    url = None
     default_headers = {
         'content-type': 'application/json'
     }
-    purse = None
 
-    def __init__(self, url=None, **options):
-        self.url = url or self.url
+    def __init__(self, **options):
         self.__dict__.update(options)
 
     def find_entity_by_id(self, entity, id):
@@ -38,8 +35,7 @@ class Identica(object):
     def _construct_url(self, endpoint):
         return "%s/%s" % (self.url, endpoint)
 
-    def configure(self, url=None, **options):
-        self.url = url or self.url
+    def configure(self, **options):
         self.__dict__.update(options)
 
     @property
