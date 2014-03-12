@@ -159,8 +159,9 @@ class TestEntity(unittest.TestCase):
                                body=json.dumps(mock_data),
                                content_type='application/json')
         i = Identica(url='http://localhost:3000/identica')
-        entities = Entity.query(i, entity='users',
-                                first_name="Jesse", last_name="Panganiban")
+        Entity.identica = i
+        Entity.entity = 'users'
+        entities = Entity.query(first_name="Jesse", last_name="Panganiban")
         self.assertIsInstance(entities, list)
         self.assertEqual(len(entities), 1)
 
