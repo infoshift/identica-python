@@ -51,6 +51,12 @@ class TestIdentica(unittest.TestCase):
         self.assertEqual(User.identica, i)
         self.assertEqual(User.identica.url, 'http://localhost:3000/identica')
 
+    def test_configure(self):
+        i = Identica()
+        i.configure(url='http://localhost:3000/identica')
+
+        self.assertEqual(i.url, 'http://localhost:3000/identica')
+
 
 if __name__ == '__main__':
     unittest.main()
