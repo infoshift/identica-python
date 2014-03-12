@@ -112,7 +112,6 @@ class Entity(object):
     @classmethod
     def find_by_id(cls, id):
         url = "%s/%s/%s" % (cls.identica.url, cls.entity, id)
-        print url
         r = cls.identica._request(url)
         if r.status_code != 200:
             return None
